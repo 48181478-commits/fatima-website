@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Galería — Panel de administración</title>
+  <link rel="icon" href="img/logo-fatima.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/estilos.css" rel="stylesheet">
+  <link href="css/admin.css" rel="stylesheet">
+</head>
+<body class="admin-body">
+
+  <nav class="admin-navbar">
+    <div class="admin-navbar-inner">
+      <a href="panel.html" class="admin-navbar-brand">
+        <img src="img/logo-fatima.png" alt="" width="40" height="40">
+        <span>Galería</span>
+      </a>
+      <div class="admin-navbar-acciones">
+        <a href="panel.html" class="admin-nav-volver">← Panel principal</a>
+        <span id="usuarioEmail" class="admin-usuario"></span>
+        <button id="btnLogout" class="admin-btn admin-btn-contorno">Cerrar sesión</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="admin-main">
+    <div class="admin-container">
+      <div class="admin-header">
+        <div>
+          <h1 class="admin-titulo">Galería de fotos</h1>
+          <p class="admin-subtitulo">Agregá, clasificá, reordená y documentá las fotos. Marcá las de archivo como <strong>históricas</strong>.</p>
+        </div>
+        <div class="admin-header-botones">
+          <button id="btnCargaMasiva" class="admin-btn admin-btn-contorno">⬆ Carga masiva</button>
+          <button id="btnAgregar" class="admin-btn admin-btn-rojo">+ Agregar foto</button>
+        </div>
+      </div>
+
+      <!-- FILTROS -->
+      <div class="admin-filtros">
+        <input type="search" id="filtroTexto" class="admin-input" placeholder="Buscar por título…">
+        <select id="filtroCategoria" class="admin-input js-categoria"></select>
+        <select id="filtroTipo" class="admin-input">
+          <option value="">Todas</option>
+          <option value="historicas">Solo históricas</option>
+          <option value="actuales">Solo actuales</option>
+          <option value="sin_anio">Sin año</option>
+        </select>
+      </div>
+
+      <!-- BARRA DE SELECCIÓN -->
+      <div id="bulkBar" class="admin-bulk-bar" hidden>
+        <span id="bulkCount" class="admin-bulk-count">0 seleccionadas</span>
+        <div class="admin-bulk-acciones">
+          <select id="bulkCategoria" class="admin-input admin-input-inline js-categoria"></select>
+          <input id="bulkAnio" type="number" min="1900" max="2100" class="admin-input admin-input-inline" placeholder="Año">
+          <button id="bulkAplicar" class="admin-btn admin-btn-contorno admin-btn-chico">Aplicar</button>
+          <button id="bulkHistoricaSi" class="admin-btn admin-btn-contorno admin-btn-chico">Marcar histórica</button>
+          <button id="bulkHistoricaNo" class="admin-btn admin-btn-contorno admin-btn-chico">Quitar histórica</button>
+          <button id="bulkEliminar" class="admin-btn admin-btn-rojo admin-btn-chico">Eliminar</button>
+          <button id="bulkLimpiar" class="admin-btn admin-btn-contorno admin-btn-chico">Limpiar</button>
+        </div>
+      </div>
+
+      <div id="cargando" class="admin-cargando">Cargando fotos…</div>
+      <div id="vacio" class="admin-vacio" hidden>
+        <p>No hay fotos en la galería todavía.</p>
+        <button class="admin-btn admin-btn-rojo" onclick="document.getElementById('btnAgregar').click()">Agregar la primera foto</button>
+      </div>
+      <div id="sinResultados" class="admin-vacio" hidden>
+        <p>No hay fotos que coincidan con el filtro.</p>
+      </div>
+
+      <div id="listaFotos" class="admin-grid"></div>
+    </div>
+  </main>
+
+  <!-- MODAL AGREGAR / EDITAR -->
+  <div class="admin-modal-overlay" id="modalOverlay" hidden>
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <h2 id="modalTitulo">Agregar foto</h2>
+        <button class="admin-modal-cerrar" id="btnCerrarModal" aria-label="Cerrar">&times;</button>
+      </div>
+
+      <div id="modalError" class="admin-error" hidden></div>
+
+      <form id="fotoForm">
+        <div class="admin-zona-upload" id="zonaUpload">
+          <input type="file" id="inputArchivo" accept="image/*" hidden>
+          <img id="previewImagen" class="admin-preview" hidden alt="Vista previa">
+          <div id="uploadPlaceholder">
+            <span class="admin-upload-icono">📷</span>
+            <p>Hacé clic o arrastrá una imagen aquí</p>
+            <span class="admin-upload-ayuda">JPG, PNG o WebP</span>
+          </div>
+        </div>
+
+        <label class="admin-label" for="inputTitulo">Título</label>
+        <input type="text" id="inputTitulo" class="admin-input" required maxlength="120" placeholder="Ej: El patio">
+
+        <div class="admin-form-grid">
+          <div>
+            <label class="admin-label" for="inputCategoria">Categoría</label>
+            <select id="inputCategoria" class="admin-input js-categoria"></select>
+          </div>
+          <div>
+            <label class="admin-label" for="inputAnio">Año</label>
+            <input type="number" id="inputAnio" class="admin-input" min="1900" max="2100" placeholder="Ej: 1975">
+          </div>
+        </div>
+
+        <label class="admin-label" for="inputLugar">Lugar</label>
+        <input type="text" id="inputLugar" class="admin-input" maxlength="120" placeholder="Ej: Patio central">
+
+        <label class="admin-label" for="inputDescripcion">Epígrafe / reseña</label>
+        <textarea id="inputDescripcion" class="admin-input" rows="3" maxlength="800" placeholder="Contá qué se ve, quiénes aparecen, qué momento de la historia del colegio es…"></textarea>
+
+        <label class="admin-check-label">
+          <input type="checkbox" id="inputDestacada">
+          <span>Foto destacada (se muestra más grande en la galería)</span>
+        </label>
+        <label class="admin-check-label">
+          <input type="checkbox" id="inputHistorica">
+          <span>Foto histórica (aparece en “Nuestra historia en fotos”)</span>
+        </label>
+
+        <div class="admin-modal-acciones">
+          <button type="button" class="admin-btn admin-btn-contorno" id="btnCancelar">Cancelar</button>
+          <button type="submit" class="admin-btn admin-btn-rojo" id="btnGuardar">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL CARGA MASIVA -->
+  <div class="admin-modal-overlay" id="modalMasivaOverlay" hidden>
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <h2>Carga masiva</h2>
+        <button class="admin-modal-cerrar" id="btnCerrarMasiva" aria-label="Cerrar">&times;</button>
+      </div>
+      <p class="admin-modal-texto">Elegí varias imágenes a la vez. Se suben todas con la categoría y el año que indiques; después podés ajustar cada una.</p>
+
+      <div id="masivaError" class="admin-error" hidden></div>
+
+      <div class="admin-zona-upload" id="zonaMasiva">
+        <input type="file" id="inputMasiva" accept="image/*" multiple hidden>
+        <div id="masivaPlaceholder">
+          <span class="admin-upload-icono">🗂️</span>
+          <p>Hacé clic o arrastrá varias imágenes aquí</p>
+          <span class="admin-upload-ayuda">Podés seleccionar muchas a la vez</span>
+        </div>
+        <div id="masivaResumen" class="admin-masiva-resumen" hidden></div>
+      </div>
+
+      <div class="admin-form-grid">
+        <div>
+          <label class="admin-label" for="masivaCategoria">Categoría</label>
+          <select id="masivaCategoria" class="admin-input js-categoria"></select>
+        </div>
+        <div>
+          <label class="admin-label" for="masivaAnio">Año</label>
+          <input type="number" id="masivaAnio" class="admin-input" min="1900" max="2100" placeholder="Ej: 1990">
+        </div>
+      </div>
+
+      <label class="admin-check-label">
+        <input type="checkbox" id="masivaHistorica">
+        <span>Marcar todas como históricas</span>
+      </label>
+
+      <div id="masivaProgreso" class="admin-progreso" hidden>
+        <div class="admin-progreso-barra"><span id="masivaProgresoFill"></span></div>
+        <span id="masivaProgresoTexto" class="admin-progreso-texto"></span>
+      </div>
+
+      <div class="admin-modal-acciones">
+        <button type="button" class="admin-btn admin-btn-contorno" id="btnCancelarMasiva">Cancelar</button>
+        <button type="button" class="admin-btn admin-btn-rojo" id="btnSubirMasiva" disabled>Subir fotos</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CONFIRMAR BORRADO (individual) -->
+  <div class="admin-modal-overlay" id="modalBorrarOverlay" hidden>
+    <div class="admin-modal admin-modal-chico">
+      <div class="admin-modal-header">
+        <h2>¿Eliminar foto?</h2>
+        <button class="admin-modal-cerrar" id="btnCerrarBorrar" aria-label="Cerrar">&times;</button>
+      </div>
+      <p class="admin-modal-texto">Esta acción no se puede deshacer.</p>
+      <div class="admin-modal-acciones">
+        <button class="admin-btn admin-btn-contorno" id="btnCancelarBorrar">Cancelar</button>
+        <button class="admin-btn admin-btn-rojo" id="btnConfirmarBorrar">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CONFIRMAR BORRADO (masivo) -->
+  <div class="admin-modal-overlay" id="modalBorrarBulkOverlay" hidden>
+    <div class="admin-modal admin-modal-chico">
+      <div class="admin-modal-header">
+        <h2>¿Eliminar seleccionadas?</h2>
+        <button class="admin-modal-cerrar" id="btnCerrarBorrarBulk" aria-label="Cerrar">&times;</button>
+      </div>
+      <p class="admin-modal-texto" id="borrarBulkTexto">Se eliminarán las fotos seleccionadas. Esta acción no se puede deshacer.</p>
+      <div class="admin-modal-acciones">
+        <button class="admin-btn admin-btn-contorno" id="btnCancelarBorrarBulk">Cancelar</button>
+        <button class="admin-btn admin-btn-rojo" id="btnConfirmarBorrarBulk">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/panel-galeria.js"></script>
+</body>
+</html>
