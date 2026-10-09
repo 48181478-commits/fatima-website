@@ -1,0 +1,202 @@
+/* Instituto Técnico Nuestra Señora de Fátima — Secundaria Diurna A-893
+   Estilos propios sobre Bootstrap 5.3 */
+
+:root {
+  --rojo: #DB353A;
+  --rojo-texto: #B8282E;
+  --rojo-hover: #8E1F24;
+  --rojo-oscuro: #A8262C;
+  --naranja: #DA7B53;
+  --naranja-claro: #F0A283;
+  --carbon: #282829;
+  --texto: #46423F;
+  --gris: #6A6360;
+  --gris-claro: #C9BEB9;
+  --borde: #E8E2DF;
+  --crema: #F7F2EF;
+  --chip: #F3EEEB;
+  --negro: #1C1C1D;
+  --serif: Georgia, "Times New Roman", serif;
+  --sans: "Trebuchet MS", Tahoma, sans-serif;
+}
+
+html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body { font-family: var(--sans); color: var(--carbon); background: #FFFFFF; }
+h1, h2, h3, .serif { font-family: var(--serif); font-weight: 700; color: var(--carbon); }
+p { color: var(--texto); }
+a { color: var(--rojo-texto); }
+a:hover { color: var(--rojo-hover); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--naranja); outline-offset: 2px; }
+
+@media (min-width: 1400px) { .container { max-width: 1216px; } }
+
+.eyebrow { font-size: .875rem; letter-spacing: .14em; text-transform: uppercase; color: var(--rojo-texto); font-weight: 700; }
+.etiqueta { font-size: .8125rem; letter-spacing: .1em; text-transform: uppercase; color: var(--gris); font-weight: 700; }
+.sello { font-size: .8125rem; font-weight: 700; color: #FFFFFF; background: var(--rojo); padding: 4px 12px; border-radius: 999px; white-space: nowrap; }
+.texto-largo { font-size: 1.125rem; line-height: 1.65; color: var(--texto); }
+.seccion { padding: 96px 0; }
+@media (max-width: 991.98px) { .seccion { padding: 64px 0; } }
+
+.titulo-seccion { font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem); line-height: 1.15; margin: 0; }
+
+/* Barra superior */
+.barra-superior { background: var(--carbon); color: var(--borde); font-size: .875rem; padding: 10px 0; }
+.barra-superior a { color: var(--naranja-claro); text-decoration: none; }
+
+/* Navegación */
+.navbar-fatima { background: #FFFFFF; border-bottom: 1px solid var(--borde); padding: 12px 0; }
+.navbar-fatima .navbar-brand img { width: 64px; height: 64px; }
+.marca-nombre { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; color: var(--carbon); line-height: 1.2; white-space: normal; }
+.marca-sub { font-size: .8125rem; letter-spacing: .08em; text-transform: uppercase; color: var(--gris); }
+@media (max-width: 575.98px) {
+  .navbar-fatima .navbar-brand img { width: 48px; height: 48px; }
+  .marca-nombre { font-size: 1rem; }
+  .marca-sub { font-size: .6875rem; }
+}
+.navbar-fatima .nav-link { color: var(--carbon); font-size: 1rem; padding: 12px 14px; }
+.navbar-fatima .nav-link:hover, .navbar-fatima .nav-link:focus { color: var(--rojo-texto); }
+.navbar-fatima .nav-link.active { color: var(--rojo-texto); box-shadow: inset 0 -3px 0 var(--rojo); border-radius: 8px; }
+.navbar-fatima .dropdown-menu { border: 1px solid var(--borde); border-radius: 14px; box-shadow: 0 12px 32px rgba(40, 40, 41, .14); padding: 8px; }
+.navbar-fatima .dropdown-item { padding: 12px 16px; border-radius: 10px; color: var(--carbon); font-size: .9375rem; }
+.navbar-fatima .dropdown-item:hover, .navbar-fatima .dropdown-item:focus { background: var(--crema); color: var(--rojo-texto); }
+@media (min-width: 992px) {
+  .navbar-fatima .dropdown:hover > .dropdown-menu { display: block; margin-top: 0; }
+  .navbar-fatima .dropdown-item { white-space: nowrap; }
+}
+.btn-donar { background: var(--rojo); color: #FFFFFF; border-radius: 999px; padding: 12px 26px; font-weight: 700; border: 0; }
+.btn-donar:hover, .btn-donar:focus { background: var(--rojo-oscuro); color: #FFFFFF; }
+
+/* Botones */
+.btn-principal { background: var(--rojo); color: #FFFFFF; border-radius: 999px; padding: 16px 30px; font-size: 1.0625rem; font-weight: 700; border: 0; }
+.btn-principal:hover { background: var(--rojo-oscuro); color: #FFFFFF; }
+.btn-contorno { color: var(--carbon); border: 2px solid var(--carbon); border-radius: 999px; padding: 14px 28px; font-size: 1.0625rem; font-weight: 700; background: transparent; }
+.btn-contorno:hover { background: var(--carbon); color: #FFFFFF; }
+.link-fuerte { color: var(--rojo-texto); font-weight: 700; text-decoration: none; }
+
+/* Noticias */
+.noticias { background: var(--crema); border-bottom: 1px solid var(--borde); padding: 36px 0 44px; }
+.noticias .carousel-indicators { position: static; margin: 0; justify-content: flex-start; }
+.noticias .carousel-indicators [data-bs-target] {
+  width: 10px; height: 10px; border-radius: 50%; background-color: var(--gris-claro);
+  opacity: 1; border: 7px solid transparent; margin: 0; box-sizing: content-box;
+}
+.noticias .carousel-indicators .active { background-color: var(--rojo); }
+.btn-flecha {
+  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--gris-claro);
+  background: #FFFFFF; color: var(--carbon); font-size: 22px; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center; padding: 0;
+}
+.btn-flecha:hover { border-color: var(--carbon); }
+.noticia-img { width: 100%; height: 320px; object-fit: cover; border-radius: 20px; display: block; }
+@media (max-width: 991.98px) { .noticia-img { height: 260px; } }
+.noticia-titulo { font-size: clamp(1.625rem, 1.3rem + 1vw, 2.125rem); line-height: 1.2; margin: 0; }
+
+/* Portada */
+.portada-titulo { font-size: clamp(2.5rem, 1.6rem + 3vw, 3.625rem); line-height: 1.08; margin: 0; }
+.portada-bajada { font-size: 1.25rem; line-height: 1.55; color: var(--texto); max-width: 34em; }
+.portada-foto { position: relative; height: 460px; }
+.portada-foto > img:first-child { width: 100%; height: 100%; object-fit: cover; object-position: center 45%; border-radius: 28px; display: block; }
+.portada-sello { position: absolute; left: -44px; bottom: -44px; width: 140px; height: 140px; filter: drop-shadow(0 6px 16px rgba(40, 40, 41, .28)); }
+@media (max-width: 991.98px) {
+  .portada-foto { height: 320px; }
+  .portada-sello { left: 16px; bottom: -36px; width: 96px; height: 96px; }
+}
+
+/* Franja roja */
+.franja { background: var(--rojo); color: #FFFFFF; padding: 48px 0; }
+.franja h3 { color: #FFFFFF; font-size: 1.375rem; line-height: 1.25; margin-bottom: 8px; }
+.franja p { color: #FFFFFF; margin: 0; line-height: 1.5; }
+
+/* Orientaciones */
+.tarjeta-orientacion { background: #FFFFFF; border: 1px solid var(--borde); border-radius: 20px; padding: 28px; height: 100%; display: flex; flex-direction: column; gap: 14px; }
+.tarjeta-orientacion h3 { font-size: 1.5rem; line-height: 1.25; margin: 0; }
+.tarjeta-orientacion p { margin: 0; line-height: 1.55; }
+.barrita { width: 44px; height: 6px; border-radius: 3px; flex-shrink: 0; }
+.detalle { padding: 56px 0; }
+.detalle + .detalle { border-top: 1px solid var(--borde); }
+.detalle h3 { font-size: clamp(1.625rem, 1.3rem + 1vw, 2.125rem); line-height: 1.2; margin: 0; }
+.chip { font-size: .9375rem; color: var(--carbon); background: var(--chip); padding: 8px 14px; border-radius: 999px; }
+.caja-egreso { background: var(--crema); border-radius: 20px; padding: 32px; }
+.caja-egreso h4 { font-family: var(--serif); font-weight: 700; font-size: 1.375rem; margin-bottom: 14px; }
+.caja-egreso li { font-size: 1.0625rem; line-height: 1.55; color: var(--texto); margin-bottom: 10px; }
+
+/* Historia */
+.historia { background: var(--crema); }
+.foto-archivo { width: 100%; max-width: 420px; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 20px; filter: sepia(.25); box-shadow: 0 10px 28px rgba(40, 40, 41, .18); display: block; }
+.pie-foto { font-size: .9375rem; line-height: 1.5; color: var(--gris); font-style: italic; margin-top: 12px; }
+.hito { border-top: 4px solid var(--rojo); padding-top: 18px; }
+.hito-hoy { border-top-color: var(--carbon); }
+.hito-anio { font-family: var(--serif); font-size: 1.875rem; font-weight: 700; color: var(--rojo-texto); }
+.hito-hoy .hito-anio { color: var(--carbon); }
+.hito p { font-size: 1rem; line-height: 1.55; margin: 10px 0 0; }
+
+/* Padre Leoncio */
+.foto-leoncio { width: 100%; aspect-ratio: 880 / 495; object-fit: cover; border-radius: 28px; display: block; }
+.valor { padding: 12px 22px; border-radius: 999px; background: var(--rojo); color: #FFFFFF; font-size: 1.0625rem; font-weight: 700; }
+
+/* Marianistas y donaciones */
+.bloque { border-radius: 28px; padding: 56px; }
+@media (max-width: 767.98px) { .bloque { padding: 32px 24px; } }
+.bloque-claro { background: var(--crema); }
+.bloque-oscuro { background: var(--carbon); color: #FFFFFF; }
+.bloque-oscuro h2 { color: #FFFFFF; }
+.bloque-oscuro p { color: var(--borde); }
+.bloque-oscuro .eyebrow { color: var(--naranja-claro); }
+.logo-red { width: 100%; height: auto; border-radius: 20px; border: 1px solid var(--borde); display: block; }
+.proximamente { display: inline-block; color: #FFFFFF; border: 2px solid var(--naranja-claro); padding: 18px 42px; border-radius: 999px; font-size: 1.25rem; font-weight: 700; }
+
+/* Galería */
+.galeria-grilla { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; gap: 12px; }
+@media (min-width: 576px) { .galeria-grilla { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 190px; } }
+@media (min-width: 992px) { .galeria-grilla { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 210px; gap: 16px; } }
+.foto-galeria {
+  position: relative; display: block; width: 100%; height: 100%; padding: 0; margin: 0;
+  border: 1px solid var(--borde); border-radius: 20px; overflow: hidden;
+  background: var(--crema); cursor: pointer; text-align: left;
+}
+.foto-galeria.destacada { grid-column: span 2; grid-row: span 2; }
+.foto-galeria > img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
+.foto-galeria:hover > img, .foto-galeria:focus-visible > img { transform: scale(1.06); }
+@media (prefers-reduced-motion: reduce) { .foto-galeria > img { transition: none; } }
+.marca-foto {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 34px 16px 14px;
+  display: flex; flex-direction: column; gap: 2px; color: #FFFFFF;
+  background: linear-gradient(to top, rgba(28, 28, 29, .88), rgba(28, 28, 29, 0));
+}
+.marca-foto-titulo { font-family: var(--serif); font-weight: 700; font-size: 1.0625rem; line-height: 1.3; }
+.marca-foto-lugar { font-size: .8125rem; letter-spacing: .04em; color: var(--gris-claro); }
+.foto-galeria:hover, .foto-galeria:focus-visible { border-color: var(--rojo); }
+
+/* Visor de la galería */
+.visor { background: var(--negro); border: 0; border-radius: 20px; overflow: hidden; }
+.visor img { width: 100%; max-height: 68vh; object-fit: contain; display: block; background: #000000; }
+.visor-pie { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px; }
+@media (max-width: 575.98px) { .visor-pie { flex-direction: column; align-items: flex-start; padding: 14px 16px; } }
+.visor-titulo { font-family: var(--serif); font-weight: 700; font-size: 1.125rem; color: #FFFFFF; line-height: 1.3; }
+.visor-lugar { font-size: .875rem; color: var(--gris-claro); }
+.visor-lugar[hidden] { display: none; }
+.visor-contador { font-size: .875rem; color: var(--gris-claro); font-variant-numeric: tabular-nums; }
+.btn-flecha-claro { border-color: rgba(255, 255, 255, .35); background: transparent; color: #FFFFFF; }
+.btn-flecha-claro:hover { border-color: #FFFFFF; }
+
+/* Contacto */
+.contacto { background: var(--rojo); color: #FFFFFF; }
+.contacto h2, .contacto p, .contacto a, .contacto dd { color: #FFFFFF; }
+.contacto dt { font-size: .8125rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; }
+.contacto dd { font-size: 1.125rem; margin-bottom: 22px; }
+
+/* Pie */
+.pie { background: var(--negro); color: var(--borde); font-size: .9375rem; padding: 40px 0; }
+.pie strong { color: #FFFFFF; }
+.pie a { color: var(--naranja-claro); }
+
+/* Ajustes de marca y menú en pantallas chicas */
+.navbar-fatima .navbar-brand { flex: 1 1 0; min-width: 0; white-space: normal; margin-right: 12px; }
+.navbar-fatima .navbar-toggler { border-color: var(--borde); }
+.navbar-fatima .navbar-toggler:focus { box-shadow: none; }
+.navbar-fatima .navbar-toggler:focus-visible { outline: 3px solid var(--naranja); outline-offset: 2px; }
+@media (min-width: 992px) { .navbar-fatima .navbar-brand { flex: 0 1 auto; } }
+@media (min-width: 992px) { .navbar-fatima .navbar-nav { flex-wrap: wrap; justify-content: flex-end; } }
+.tarjeta-orientacion .etiqueta { white-space: nowrap; }

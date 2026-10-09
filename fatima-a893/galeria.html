@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Galería de fotos — Instituto Técnico Nuestra Señora de Fátima</title>
+  <meta name="description" content="Fotos de la vida escolar del Instituto Técnico Nuestra Señora de Fátima, Secundaria Diurna A-893, Villa Soldati, CABA.">
+  <link rel="icon" href="img/logo-fatima.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/estilos.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- BARRA SUPERIOR -->
+  <div class="barra-superior d-none d-md-block">
+    <div class="container d-flex justify-content-between align-items-center gap-4">
+      <span>Secundaria Diurna · A-893 · Villa Soldati, CABA</span>
+      <span class="d-flex gap-4 align-items-center">
+        <span>Atención: lunes a viernes de 8 a 14 h</span>
+        <a href="mailto:secretaria.sd@fatimarem.edu.ar">secretaria.sd@fatimarem.edu.ar</a>
+      </span>
+    </div>
+  </div>
+
+  <!-- NAVEGACIÓN -->
+  <nav class="navbar navbar-expand-lg navbar-fatima sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-3 me-auto" href="index.html">
+        <img src="img/logo-fatima.png" alt="Logo del Instituto Nuestra Señora de Fátima">
+        <span class="d-flex flex-column">
+          <span class="marca-nombre">Instituto Técnico Nuestra Señora de Fátima</span>
+          <span class="marca-sub">Secundaria Diurna · A-893</span>
+        </span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu" aria-controls="menu" aria-expanded="false" aria-label="Abrir menú">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse flex-grow-0" id="menu">
+        <ul class="navbar-nav align-items-lg-center gap-lg-1 pt-3 pt-lg-0">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="index.html#nosotros" role="button" data-bs-toggle="dropdown" aria-expanded="false">Sobre nosotros</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="index.html#historia">Nuestra historia</a></li>
+              <li><a class="dropdown-item" href="index.html#marianistas">Red Marianista</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="index.html#orientaciones" role="button" data-bs-toggle="dropdown" aria-expanded="false">Orientaciones</a>
+            <ul class="dropdown-menu dropdown-menu-lg-end">
+              <li><a class="dropdown-item" href="index.html#gestion">Gestión y Administración de las Organizaciones</a></li>
+              <li><a class="dropdown-item" href="index.html#computacion">Computación</a></li>
+              <li><a class="dropdown-item" href="index.html#electromecanica">Electromecánica</a></li>
+              <li><a class="dropdown-item" href="index.html#bachillerato">Bachiller en Ciencias Sociales</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="galeria.html">Galería</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#contacto">Contacto</a></li>
+          <li class="nav-item ms-lg-2 py-2 py-lg-0"><a class="btn btn-donar" href="index.html#donaciones">Donar</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- GALERÍA -->
+    <section class="seccion">
+      <div class="container">
+        <div class="d-flex flex-column gap-3 mb-5" style="max-width: 760px">
+          <span class="eyebrow">Galería</span>
+          <h1 class="titulo-seccion">La vida en Fátima, en fotos</h1>
+          <p class="texto-largo m-0">El patio, los talleres, el laboratorio y los proyectos de los alumnos. Tocá una foto para verla completa.</p>
+        </div>
+        <div class="galeria-grilla" id="galeriaGrilla">
+          <button class="foto-galeria destacada" type="button" data-src="img/patio.jpg" data-alt="Patio del Instituto Nuestra Señora de Fátima con alumnos en el recreo" data-titulo="El patio" data-lugar="Vida escolar">
+            <img src="img/patio.jpg" alt="Patio del Instituto Nuestra Señora de Fátima con alumnos en el recreo" loading="lazy" width="1000" height="1000">
+            <span class="marca-foto"><span class="marca-foto-titulo">El patio</span><span class="marca-foto-lugar">Vida escolar</span></span>
+          </button>
+          <button class="foto-galeria" type="button" data-src="img/sensepad.jpg" data-alt="Equipo de SensePad con el certificado y la placa de Proyecto Destacado 2026" data-titulo="SensePad, Proyecto Destacado" data-lugar="Feria de Ciencias">
+            <img src="img/sensepad.jpg" alt="Equipo de SensePad con el certificado y la placa de Proyecto Destacado 2026" loading="lazy" width="1000" height="1000">
+            <span class="marca-foto"><span class="marca-foto-titulo">SensePad, Proyecto Destacado</span><span class="marca-foto-lugar">Feria de Ciencias</span></span>
+          </button>
+          <button class="foto-galeria" type="button" data-src="img/firenova.jpg" data-alt="Alumno de Fátima trabajando en el mapa de calor de FireNova en el laboratorio de informática" data-titulo="FireNova en el laboratorio" data-lugar="Orientación en Computación">
+            <img src="img/firenova.jpg" alt="Alumno de Fátima trabajando en el mapa de calor de FireNova en el laboratorio de informática" loading="lazy" width="1000" height="1000">
+            <span class="marca-foto"><span class="marca-foto-titulo">FireNova en el laboratorio</span><span class="marca-foto-lugar">Orientación en Computación</span></span>
+          </button>
+          <button class="foto-galeria" type="button" data-src="img/padre-leoncio-historica.jpg" data-alt="Foto de archivo: el padre Leoncio caminando de la mano con niños del barrio frente a una casilla de madera" data-titulo="Los primeros años" data-lugar="Foto de archivo · Nuestra historia">
+            <img src="img/padre-leoncio-historica.jpg" alt="Foto de archivo: el padre Leoncio caminando de la mano con niños del barrio frente a una casilla de madera" loading="lazy" width="1000" height="1000">
+            <span class="marca-foto"><span class="marca-foto-titulo">Los primeros años</span><span class="marca-foto-lugar">Foto de archivo · Nuestra historia</span></span>
+          </button>
+          <button class="foto-galeria" type="button" data-src="img/padre-leoncio.jpg" data-alt="El padre Leoncio Herrero sonriendo, rodeado de chicos de la escuela" data-titulo="El padre Leoncio con los chicos" data-lugar="Nuestro fundador">
+            <img src="img/padre-leoncio.jpg" alt="El padre Leoncio Herrero sonriendo, rodeado de chicos de la escuela" loading="lazy" width="1000" height="1000">
+            <span class="marca-foto"><span class="marca-foto-titulo">El padre Leoncio con los chicos</span><span class="marca-foto-lugar">Nuestro fundador</span></span>
+          </button>
+        </div>
+        <div class="d-flex flex-column align-items-start gap-3 pt-5">
+          <p class="m-0" style="color: var(--gris); font-size: 1.0625rem">¿Querés que aparezcan más fotos? Compartilas con la secretaría de la escuela.</p>
+          <div class="d-flex gap-3 flex-wrap">
+            <a class="btn btn-principal" href="mailto:secretaria.sd@fatimarem.edu.ar">Enviar fotos</a>
+            <a class="btn btn-contorno" href="index.html#contacto">Contacto</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISOR DE LA GALERÍA -->
+    <div class="modal fade" id="visorGaleria" tabindex="-1" role="dialog" aria-modal="true" aria-label="Visor de la galería de fotos">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content visor">
+          <div class="modal-body p-0">
+            <img id="visorImagen" src="" alt="">
+          </div>
+          <div class="visor-pie">
+            <div class="visor-datos">
+              <div class="visor-titulo" id="visorTitulo"></div>
+              <div class="visor-lugar" id="visorLugar"></div>
+            </div>
+            <div class="d-flex align-items-center gap-2 flex-shrink-0">
+              <span class="visor-contador" id="visorContador"></span>
+              <button class="btn-flecha btn-flecha-claro" type="button" id="visorAnterior" aria-label="Foto anterior">‹</button>
+              <button class="btn-flecha btn-flecha-claro" type="button" id="visorSiguiente" aria-label="Foto siguiente">›</button>
+              <button class="btn-close btn-close-white ms-1" type="button" data-bs-dismiss="modal" aria-label="Cerrar la galería"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- PIE -->
+  <footer class="pie">
+    <div class="container">
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-6 d-flex align-items-center gap-3">
+          <img src="img/logo-fatima.png" alt="" width="56" height="56">
+          <div><strong>Instituto Técnico Nuestra Señora de Fátima</strong><br>Secundaria Diurna · A-893 · Red Educativa Marianista</div>
+        </div>
+        <div class="col-sm-6 col-lg-3">Pergamino 2882, Villa Soldati, CABA<br>Lunes a viernes, 8 a 14 h</div>
+        <div class="col-sm-6 col-lg-3">
+          <a href="galeria.html">Galería de fotos</a><br>
+          <a href="mailto:secretaria.sd@fatimarem.edu.ar">secretaria.sd@fatimarem.edu.ar</a><br>
+          <a href="https://www.instagram.com/institutofatimasoldati/" target="_blank" rel="noopener">@institutofatimasoldati</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/galeria.js"></script>
+  <script>
+    // En celular, cerrar el menú al elegir una sección
+    document.querySelectorAll('#menu a:not(.dropdown-toggle)').forEach(function (enlace) {
+      enlace.addEventListener('click', function () {
+        var menu = document.getElementById('menu');
+        if (menu.classList.contains('show')) bootstrap.Collapse.getOrCreateInstance(menu).hide();
+      });
+    });
+  </script>
+</body>
+</html>
