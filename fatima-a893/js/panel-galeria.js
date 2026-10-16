@@ -493,7 +493,7 @@ function abrirModalAgregar() {
     inputMasiva.value = '';
     masivaCategoria.value = '';
     masivaAnio.value = '';
-    if (masivaHistorica) masivaHistorica.checked = false;
+    
     if (masivaDestacada) masivaDestacada.checked = false;
     masivaError.hidden = true;
     masivaProgreso.hidden = true;
