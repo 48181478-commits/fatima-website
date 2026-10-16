@@ -494,7 +494,7 @@ function abrirModalAgregar() {
     inputMasiva.value = '';
     masivaCategoria.value = '';
     masivaAnio.value = '';
-    masivaHistorica.checked = false;
+    if (masivaHistorica) masivaHistorica.checked = false;
     if (masivaDestacada) masivaDestacada.checked = false;
     masivaError.hidden = true;
     masivaProgreso.hidden = true;
