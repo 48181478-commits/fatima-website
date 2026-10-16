@@ -554,7 +554,7 @@ function abrirModalAgregar() {
     btnSubirMasiva.textContent = 'Subiendo…';
     var cat = masivaCategoria.value || null;
     var anio = masivaAnio.value.trim() ? parseInt(masivaAnio.value, 10) : null;
-    var historica = masivaHistorica.checked;
+    var destacada = masivaDestacada.checked;
     var base = proximoOrden();
     var total = archivosMasivos.length;
     var errores = 0;
