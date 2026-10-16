@@ -4,8 +4,6 @@
   var grilla = document.getElementById('galeriaGrilla');
   var filtrosBox = document.getElementById('galeriaFiltros');
   var cargando = document.getElementById('galeriaCargando');
-  var historiaFotos = document.getElementById('historiaFotos');
-  var historiaTimeline = document.getElementById('historiaTimeline');
   var visor = document.getElementById('visorGaleria');
   if (!grilla || !visor || typeof bootstrap === 'undefined') return;
 
@@ -61,7 +59,6 @@
     if (cargando) cargando.hidden = true;
     construirFiltros();
     renderGrilla();
-    renderHistoria();
   }
 
   function categoriasDisponibles() {
@@ -114,12 +111,10 @@
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'foto-galeria aparecer' +
-        (foto.destacada ? ' destacada' : '') +
-        (foto.es_historica ? ' historica' : '');
-      btn.style.animationDelay = Math.min(i * 40, 400) + 'ms';
+        (foto.destacada ? ' destacada' : '');
+      btn.style.animationDelay = Math.min(i * 60, 420) + 'ms';
       btn.innerHTML =
         '<img src="' + escapar(foto.imagen_url) + '" alt="' + escapar(foto.titulo) + '" loading="lazy" width="1000" height="1000">' +
-        (foto.es_historica ? '<span class="marca-historica">Archivo</span>' : '') +
         '<span class="marca-foto">' +
           '<span class="marca-foto-titulo">' + escapar(foto.titulo) + '</span>' +
           (foto.lugar ? '<span class="marca-foto-lugar">' + escapar(foto.lugar) + '</span>' : '') +
@@ -129,50 +124,6 @@
       })(i));
       grilla.appendChild(btn);
     });
-  }
-
-  function renderHistoria() {
-    if (!historiaFotos || !historiaTimeline) return;
-    var historicas = todasFotos.filter(function (f) { return f.es_historica; });
-    if (!historicas.length) { historiaFotos.hidden = true; return; }
-
-    var grupos = {};
-    historicas.forEach(function (f) {
-      var clave = f.anio ? String(f.anio) : 'sin';
-      if (!grupos[clave]) grupos[clave] = [];
-      grupos[clave].push(f);
-    });
-
-    var claves = Object.keys(grupos).filter(function (k) { return k !== 'sin'; })
-      .sort(function (a, b) { return parseInt(a, 10) - parseInt(b, 10); });
-    if (grupos['sin']) claves.push('sin');
-
-    historiaTimeline.innerHTML = '';
-    claves.forEach(function (clave) {
-      var etiqueta = clave === 'sin' ? 'Sin fecha' : clave;
-      var fotosHtml = '';
-      grupos[clave].forEach(function (f) {
-        var idx = historicas.indexOf(f);
-        fotosHtml += '<button class="foto-historia aparecer" data-index="' + idx + '">' +
-          '<img src="' + escapar(f.imagen_url) + '" alt="' + escapar(f.titulo) + '" loading="lazy">' +
-          '<span class="foto-historia-titulo">' + escapar(f.titulo) + '</span>' +
-        '</button>';
-      });
-      var grupo = document.createElement('div');
-      grupo.className = 'linea-tiempo-grupo';
-      grupo.innerHTML =
-        '<div class="linea-tiempo-anio">' + escapar(etiqueta) + '</div>' +
-        '<div class="linea-tiempo-contenido"><div class="linea-tiempo-fotos">' + fotosHtml + '</div></div>';
-      historiaTimeline.appendChild(grupo);
-    });
-
-    historiaTimeline.querySelectorAll('.foto-historia').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        abrirVisor(historicas, parseInt(btn.dataset.index, 10));
-      });
-    });
-
-    historiaFotos.hidden = false;
   }
 
   function abrirVisor(lista, indice) {

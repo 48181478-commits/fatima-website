@@ -44,9 +44,7 @@
         <select id="filtroCategoria" class="admin-input js-categoria"></select>
         <select id="filtroTipo" class="admin-input">
           <option value="">Todas</option>
-          <option value="historicas">Solo históricas</option>
-          <option value="actuales">Solo actuales</option>
-          <option value="sin_anio">Sin año</option>
+          <option value="destacadas">Solo destacadas</option>
         </select>
       </div>
 
@@ -57,8 +55,8 @@
           <select id="bulkCategoria" class="admin-input admin-input-inline js-categoria"></select>
           <input id="bulkAnio" type="number" min="1900" max="2100" class="admin-input admin-input-inline" placeholder="Año">
           <button id="bulkAplicar" class="admin-btn admin-btn-contorno admin-btn-chico">Aplicar</button>
-          <button id="bulkHistoricaSi" class="admin-btn admin-btn-contorno admin-btn-chico">Marcar histórica</button>
-          <button id="bulkHistoricaNo" class="admin-btn admin-btn-contorno admin-btn-chico">Quitar histórica</button>
+          <button id="bulkDestacar" class="admin-btn admin-btn-contorno admin-btn-chico">Destacar</button>
+          <button id="bulkQuitarDestacada" class="admin-btn admin-btn-contorno admin-btn-chico">Quitar destacadas</button>
           <button id="bulkEliminar" class="admin-btn admin-btn-rojo admin-btn-chico">Eliminar</button>
           <button id="bulkLimpiar" class="admin-btn admin-btn-contorno admin-btn-chico">Limpiar</button>
         </div>
@@ -120,11 +118,7 @@
 
         <label class="admin-check-label">
           <input type="checkbox" id="inputDestacada">
-          <span>Foto destacada (se muestra más grande en la galería)</span>
-        </label>
-        <label class="admin-check-label">
-          <input type="checkbox" id="inputHistorica">
-          <span>Foto histórica (aparece en “Nuestra historia en fotos”)</span>
+          <span>Destacada</span>
         </label>
 
         <div class="admin-modal-acciones">
@@ -168,8 +162,8 @@
       </div>
 
       <label class="admin-check-label">
-        <input type="checkbox" id="masivaHistorica">
-        <span>Marcar todas como históricas</span>
+        <input type="checkbox" id="masivaDestacada">
+        <span>Marcar todas como destacadas</span>
       </label>
 
       <div id="masivaProgreso" class="admin-progreso" hidden>

@@ -47,6 +47,7 @@
   var masivaCategoria = document.getElementById('masivaCategoria');
   var masivaAnio = document.getElementById('masivaAnio');
   var masivaHistorica = document.getElementById('masivaHistorica');
+  var masivaDestacada = document.getElementById('masivaDestacada');
   var masivaError = document.getElementById('masivaError');
   var masivaProgreso = document.getElementById('masivaProgreso');
   var masivaProgresoFill = document.getElementById('masivaProgresoFill');
@@ -129,9 +130,7 @@
     return fotos.filter(function (f) {
       if (texto && (f.titulo || '').toLowerCase().indexOf(texto) === -1) return false;
       if (cat && (f.categoria || '') !== cat) return false;
-      if (tipo === 'historicas' && !f.es_historica) return false;
-      if (tipo === 'actuales' && f.es_historica) return false;
-      if (tipo === 'sin_anio' && f.anio) return false;
+      if (tipo === 'destacadas' && !f.destacada) return false;
       return true;
     });
   }
@@ -170,14 +169,16 @@
           '<label class="admin-card-check" title="Seleccionar">' +
             '<input type="checkbox" class="check-foto" data-id="' + foto.id + '"' + (seleccion[foto.id] ? ' checked' : '') + '>' +
           '</label>' +
+          '<button class="admin-card-star' + (foto.destacada ? ' activa' : '') + '" data-accion="destacar" data-id="' + foto.id + '" title="' + (foto.destacada ? 'Quitar de destacadas' : 'Marcar como destacada') + '">' +
+            (foto.destacada ? '★' : '☆') +
+          '</button>' +
         '</div>' +
         '<div class="admin-card-body">' +
           '<span class="admin-card-titulo">' + escapar(foto.titulo) + '</span>' +
           (meta.length ? '<span class="admin-card-lugar">' + meta.join(' · ') + '</span>' : '') +
           (foto.lugar ? '<span class="admin-card-lugar">' + escapar(foto.lugar) + '</span>' : '') +
           '<span class="admin-card-badges">' +
-            (foto.destacada ? '<span class="admin-card-badge">Destacada</span>' : '') +
-            (foto.es_historica ? '<span class="admin-card-badge admin-badge-hist">Histórica</span>' : '') +
+            (foto.destacada ? '<span class="admin-card-badge admin-badge-dest">Destacada</span>' : '') +
           '</span>' +
         '</div>' +
         '<div class="admin-card-acciones">' +
@@ -201,6 +202,7 @@
     if (accion === 'borrar') abrirModalBorrar(id);
     if (accion === 'subir') moverFoto(id, -1);
     if (accion === 'bajar') moverFoto(id, 1);
+    if (accion === 'destacar') alternarDestacada(id, btn);
   });
 
   listaFotos.addEventListener('change', function (e) {
@@ -245,17 +247,35 @@
     if (anio) cambios.anio = parseInt(anio, 10);
     await actualizarEnBloque(ids, cambios, 'Error al aplicar los cambios');
   });
-
-  document.getElementById('bulkHistoricaSi').addEventListener('click', function () {
-    marcarHistorica(idsSeleccionados(), true);
-  });
-  document.getElementById('bulkHistoricaNo').addEventListener('click', function () {
-    marcarHistorica(idsSeleccionados(), false);
+document.getElementById('bulkDestacar').addEventListener('click', function () {
+    alternarDestacadas(idsSeleccionados(), true);
   });
 
-  async function marcarHistorica(ids, valor) {
+  document.getElementById('bulkQuitarDestacada').addEventListener('click', function () {
+    alternarDestacadas(idsSeleccionados(), false);
+  });
+
+  async function alternarDestacadas(ids, valor) {
     if (!ids.length) return;
-    await actualizarEnBloque(ids, { es_historica: valor }, 'Error al actualizar');
+    await actualizarEnBloque(ids, { destacada: valor }, 'Error al actualizar');
+  }
+
+  async function alternarDestacada(id, btn) {
+    var foto = fotos.find(function (f) { return f.id === id; });
+    if (!foto) return;
+    var nueva = !foto.destacada;
+    btn.classList.toggle('activa', nueva);
+    btn.textContent = nueva ? '★' : '☆';
+    btn.title = nueva ? 'Quitar de destacadas' : 'Marcar como destacada';
+    foto.destacada = nueva;
+    renderFotos();
+    try {
+      var { error } = await db.from('galeria_fotos').update({ destacada: nueva }).eq('id', id);
+      if (error) throw error;
+    } catch (err) {
+      foto.destacada = !nueva;
+      renderFotos();
+    }
   }
 
   async function actualizarEnBloque(ids, cambios, mensajeError) {
@@ -323,7 +343,7 @@
 
   /* ── MODAL AGREGAR / EDITAR ── */
 
-  function abrirModalAgregar() {
+function abrirModalAgregar() {
     editandoId = null;
     imagenActualUrl = null;
     archivoSeleccionado = null;
@@ -334,13 +354,12 @@
     inputLugar.value = '';
     inputDescripcion.value = '';
     inputDestacada.checked = false;
-    inputHistorica.checked = false;
     previewImagen.hidden = true;
-    uploadPlaceholder.hidden = false;
-    inputArchivo.value = '';
+    if (uploadPlaceholder) uploadPlaceholder.hidden = false;
+    zonaUpload.classList.remove('tiene-imagen');
+    fotoForm.dataset.editando = '0';
     modalError.hidden = true;
     modalOverlay.hidden = false;
-    inputTitulo.focus();
   }
 
   function abrirModalEditar(id) {
@@ -356,7 +375,7 @@
     inputLugar.value = foto.lugar || '';
     inputDescripcion.value = foto.descripcion || '';
     inputDestacada.checked = !!foto.destacada;
-    inputHistorica.checked = !!foto.es_historica;
+    if (inputHistorica) inputHistorica.checked = false;
     previewImagen.src = foto.imagen_url;
     previewImagen.hidden = false;
     uploadPlaceholder.hidden = true;
@@ -428,7 +447,7 @@
       var lugar = inputLugar.value.trim();
       var descripcion = inputDescripcion.value.trim() || null;
       var destacada = inputDestacada.checked;
-      var historica = inputHistorica.checked;
+      var historica = false;
       var imagenUrl = imagenActualUrl;
 
       if (archivoSeleccionado) imagenUrl = await subirImagen(archivoSeleccionado);
@@ -476,6 +495,7 @@
     masivaCategoria.value = '';
     masivaAnio.value = '';
     masivaHistorica.checked = false;
+    if (masivaDestacada) masivaDestacada.checked = false;
     masivaError.hidden = true;
     masivaProgreso.hidden = true;
     masivaResumen.hidden = true;
@@ -548,11 +568,13 @@
       try {
         var url = await subirImagen(file);
         var titulo = file.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').trim() || 'Foto';
-        var { error } = await db.from('galeria_fotos').insert({
+        var insert = {
           titulo: titulo, categoria: cat, anio: anio, lugar: '',
           descripcion: null, imagen_url: url, destacada: false,
-          es_historica: historica, orden: base + i
-        });
+          es_historica: false, orden: base + i
+        };
+        if (destacada) insert.destacada = true;
+        var { error } = await db.from('galeria_fotos').insert(insert);
         if (error) throw error;
       } catch (err) {
         errores++;

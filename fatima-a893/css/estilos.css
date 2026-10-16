@@ -238,39 +238,6 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--naranja); outli
 .chip-filtro:hover { border-color: var(--rojo); color: var(--rojo-texto); }
 .chip-filtro.activo { background: var(--rojo); border-color: var(--rojo); color: #FFFFFF; }
 
-/* Foto de archivo (histórica) */
-.foto-galeria.historica > img { filter: sepia(.45) contrast(.95); }
-.foto-galeria.historica:hover > img, .foto-galeria.historica:focus-visible > img { filter: sepia(.12); }
-.marca-historica {
-  position: absolute; top: 12px; left: 12px; z-index: 2;
-  background: rgba(28, 28, 29, .78); color: #FFFFFF;
-  font-size: .6875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-  padding: 4px 10px; border-radius: 999px;
-}
-
-/* Nuestra historia en fotos */
-.historia-fotos { background: var(--crema); border-top: 1px solid var(--borde); padding: 88px 0; }
-@media (max-width: 991.98px) { .historia-fotos { padding: 64px 0; } }
-.historia-fotos-header { display: flex; flex-direction: column; gap: 12px; max-width: 760px; margin-bottom: 48px; }
-.linea-tiempo-grupo { display: grid; grid-template-columns: 120px 1fr; gap: 24px; padding-bottom: 40px; }
-.linea-tiempo-anio {
-  font-family: var(--serif); font-weight: 700; font-size: 1.5rem; color: var(--rojo-texto);
-  border-top: 4px solid var(--rojo); padding-top: 10px; height: fit-content;
-}
-.linea-tiempo-contenido { border-left: 2px solid var(--borde); padding-left: 24px; }
-.linea-tiempo-fotos { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
-.foto-historia {
-  border: 1px solid var(--borde); border-radius: 16px; overflow: hidden; padding: 0; margin: 0;
-  background: #FFFFFF; cursor: pointer; text-align: left; display: flex; flex-direction: column;
-}
-.foto-historia img { width: 100%; height: 160px; object-fit: cover; display: block; filter: sepia(.45) contrast(.95); transition: filter .3s ease, transform .45s ease; }
-.foto-historia:hover img, .foto-historia:focus-visible img { filter: sepia(.1); transform: scale(1.04); }
-.foto-historia-titulo { font-family: var(--serif); font-weight: 700; font-size: .9375rem; color: var(--carbon); padding: 12px 14px; line-height: 1.3; }
-@media (max-width: 767.98px) {
-  .linea-tiempo-grupo { grid-template-columns: 1fr; gap: 12px; }
-  .linea-tiempo-contenido { border-left: 0; padding-left: 0; }
-}
-
 /* Visor de la galería */
 .visor { background: var(--negro); border: 0; border-radius: 20px; overflow: hidden; }
 .visor img { width: 100%; max-height: 68vh; object-fit: contain; display: block; background: #000000; }
@@ -297,8 +264,12 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--naranja); outli
   display: flex; flex-direction: column; transition: box-shadow .3s ease, transform .3s ease;
 }
 .tarjeta-proyecto:hover { box-shadow: 0 14px 32px rgba(40, 40, 41, .12); transform: translateY(-4px); }
-@media (prefers-reduced-motion: reduce) { .tarjeta-proyecto { transition: none; } }
-.tarjeta-proyecto-img { width: 100%; height: 220px; object-fit: cover; display: block; background: var(--crema); }
+@media (prefers-reduced-motion: reduce) { .tarjeta-proyecto { transition: none; } .tarjeta-proyecto:hover { transform: none; } .tarjeta-proyecto-img { transition: none; } }
+.tarjeta-proyecto-img {
+  width: 100%; height: 220px; object-fit: cover; display: block; background: var(--crema);
+  transition: transform .45s ease;
+}
+.tarjeta-proyecto:hover .tarjeta-proyecto-img, .tarjeta-proyecto:focus-within .tarjeta-proyecto-img { transform: scale(1.05); }
 .tarjeta-proyecto-img.sin-imagen { display: flex; align-items: center; justify-content: center; color: var(--gris); font-size: .9375rem; }
 .tarjeta-proyecto-body { padding: 24px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
 .tarjeta-proyecto-body h3 { font-size: 1.375rem; line-height: 1.25; margin: 0; }
@@ -310,8 +281,8 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--naranja); outli
 .estado-pausado { background: rgba(106, 99, 96, .14); color: var(--gris); }
 
 /* Aparición suave (galería y proyectos) */
-.aparecer { animation: aparecer .5s ease both; }
-@keyframes aparecer { from { opacity: 0; } to { opacity: 1; } }
+.aparecer { animation: aparecer .45s ease both; }
+@keyframes aparecer { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .aparecer { animation: none; } }
 
 /* Contacto */

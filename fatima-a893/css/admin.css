@@ -37,6 +37,7 @@
   .admin-body .admin-progreso-barra > span { animation: none; }
   .admin-body .admin-card, .admin-body .admin-card .admin-card-img { transform: none; transition: none; }
   .admin-body .admin-card:hover { transform: none; }
+  .admin-body .admin-card-star:hover { transform: none; }
 }
 
 /* ── LOGIN ── */
@@ -492,9 +493,30 @@ textarea.admin-input { resize: vertical; }
   box-shadow: 0 2px 8px rgba(40, 40, 41, .18);
 }
 .admin-card-check input { width: 18px; height: 18px; accent-color: var(--rojo); margin: 0; }
+.admin-card-star {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  background: rgba(28, 28, 29, .72);
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, transform .2s;
+}
+.admin-card-star.activa { color: var(--rojo); background: rgba(255, 255, 255, .94); }
+.admin-card-star:hover { transform: scale(1.1); }
+.admin-card-star:focus-visible { outline: 2px solid var(--rojo); outline-offset: 2px; }
 .admin-card-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
 .admin-card-badges .admin-card-badge { margin-top: 0; }
-.admin-badge-hist { background: #8A6D3B; }
+.admin-badge-dest { background: var(--rojo); }
 
 /* ── CARGA MASIVA ── */
 .admin-masiva-resumen { display: flex; flex-direction: column; gap: 4px; font-size: .9375rem; color: var(--texto); font-weight: 700; }
