@@ -19,6 +19,7 @@
   var categoriaActiva = '';
   var visorLista = [];
   var visorIndice = 0;
+  var categoriasOrden = (typeof CATEGORIAS !== 'undefined') ? CATEGORIAS.slice() : [];
 
   var FOTOS_FALLBACK = [
     {
@@ -67,10 +68,10 @@
     todasFotos.forEach(function (f) {
       if (f.categoria && !vistas[f.categoria]) { vistas[f.categoria] = true; lista.push(f.categoria); }
     });
-    if (typeof CATEGORIAS !== 'undefined') {
+    if (categoriasOrden.length) {
       lista.sort(function (a, b) {
-        var ia = CATEGORIAS.indexOf(a); if (ia === -1) ia = 999;
-        var ib = CATEGORIAS.indexOf(b); if (ib === -1) ib = 999;
+        var ia = categoriasOrden.indexOf(a); if (ia === -1) ia = 999;
+        var ib = categoriasOrden.indexOf(b); if (ib === -1) ib = 999;
         return ia - ib;
       });
     }
@@ -171,14 +172,18 @@
   });
 
   if (typeof db !== 'undefined') {
-    db.from('galeria_fotos')
-      .select('*')
-      .order('orden', { ascending: true })
-      .then(function (result) {
-        var fotos = (!result.error && result.data && result.data.length) ? result.data : FOTOS_FALLBACK;
-        iniciar(fotos);
-      })
-      .catch(function () { iniciar(FOTOS_FALLBACK); });
+    Promise.all([
+      db.from('galeria_fotos').select('*').order('orden', { ascending: true }),
+      db.from('categorias').select('nombre').order('orden', { ascending: true }).order('nombre', { ascending: true })
+    ]).then(function (res) {
+      var rFotos = res[0];
+      var rCats = res[1];
+      if (!rCats.error && rCats.data && rCats.data.length) {
+        categoriasOrden = rCats.data.map(function (c) { return c.nombre; });
+      }
+      var fotos = (!rFotos.error && rFotos.data && rFotos.data.length) ? rFotos.data : FOTOS_FALLBACK;
+      iniciar(fotos);
+    }).catch(function () { iniciar(FOTOS_FALLBACK); });
   } else {
     iniciar(FOTOS_FALLBACK);
   }

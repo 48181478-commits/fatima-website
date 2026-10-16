@@ -34,6 +34,7 @@
 @media (prefers-reduced-motion: reduce) {
   .admin-body .admin-card, .admin-body .admin-modal, .admin-body .admin-modal-overlay,
   .admin-body .admin-bulk-bar, .admin-body .admin-cargando,
+  .admin-body .admin-masiva-thumbs, .admin-body .admin-masiva-thumbs img,
   .admin-body .admin-progreso-barra > span { animation: none; }
   .admin-body .admin-card, .admin-body .admin-card .admin-card-img { transform: none; transition: none; }
   .admin-body .admin-card:hover { transform: none; }
@@ -519,8 +520,27 @@ textarea.admin-input { resize: vertical; }
 .admin-badge-dest { background: var(--rojo); }
 
 /* ── CARGA MASIVA ── */
-.admin-masiva-resumen { display: flex; flex-direction: column; gap: 4px; font-size: .9375rem; color: var(--texto); font-weight: 700; }
+.admin-masiva-resumen { display: flex; flex-direction: column; gap: 8px; font-size: .9375rem; color: var(--texto); font-weight: 700; text-align: center; width: 100%; }
 .admin-masiva-resumen .admin-upload-ayuda { font-weight: 400; }
+.admin-masiva-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 4px;
+  animation: admin-entrada .3s ease both;
+}
+.admin-masiva-thumbs img {
+  width: 68px;
+  height: 68px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--borde);
+  background: var(--fondo);
+  animation: admin-entrada .3s ease both;
+}
 .admin-progreso { margin-top: 18px; display: flex; flex-direction: column; gap: 6px; }
 .admin-progreso-barra { width: 100%; height: 10px; background: var(--borde); border-radius: 999px; overflow: hidden; }
 .admin-progreso-barra > span {

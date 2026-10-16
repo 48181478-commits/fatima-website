@@ -57,16 +57,18 @@
   var btnLogout = document.getElementById('btnLogout');
 
   var fotos = [];
+  var categorias = [];
   var editandoId = null;
   var borrandoId = null;
   var archivoSeleccionado = null;
   var imagenActualUrl = null;
   var archivosMasivos = [];
+  var miniaturas = [];
   var subiendoMasiva = false;
   var seleccion = {};
   var BUCKET = 'Fatima-website-imagenes';
 
-  poblarCategorias();
+  cargarCategorias().then(poblarCategorias);
 
   db.auth.getSession().then(function (result) {
     if (!result.data.session) {
@@ -84,6 +86,24 @@
     });
   }
 
+  async function cargarCategorias() {
+    try {
+      var { data, error } = await db
+        .from('categorias')
+        .select('*')
+        .order('orden', { ascending: true })
+        .order('nombre', { ascending: true });
+      if (error) throw error;
+      categorias = data || [];
+    } catch (err) {
+      categorias = (typeof CATEGORIAS !== 'undefined' ? CATEGORIAS : []).map(function (nombre, i) {
+        return { id: null, nombre: nombre, orden: i };
+      });
+    }
+  }
+
+  var OPCION_NUEVA = '__nueva_categoria__';
+
   function poblarCategorias() {
     var placeholders = {
       filtroCategoria: 'Todas las categorías',
@@ -93,13 +113,55 @@
     };
     document.querySelectorAll('.js-categoria').forEach(function (select) {
       var etiqueta = placeholders[select.id] || 'Sin categoría';
+      var previo = select.value;
       var html = '<option value="">' + etiqueta + '</option>';
-      CATEGORIAS.forEach(function (cat) {
-        html += '<option value="' + cat + '">' + cat + '</option>';
+      categorias.forEach(function (cat) {
+        html += '<option value="' + escaparAttr(cat.nombre) + '">' + escapar(cat.nombre) + '</option>';
       });
+      html += '<option value="' + OPCION_NUEVA + '">+ Añadir categoría…</option>';
       select.innerHTML = html;
+      if (previo && previo !== OPCION_NUEVA) select.value = previo;
     });
   }
+
+  function escaparAttr(texto) {
+    return String(texto == null ? '' : texto)
+      .replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  async function agregarCategoria(nombre) {
+    nombre = (nombre || '').trim();
+    if (!nombre) return null;
+    var existente = categorias.filter(function (c) {
+      return c.nombre.toLowerCase() === nombre.toLowerCase();
+    })[0];
+    if (existente) return existente.nombre;
+
+    var orden = categorias.reduce(function (max, c) { return Math.max(max, c.orden || 0); }, 0) + 1;
+    var { error } = await db.from('categorias').insert({ nombre: nombre, orden: orden });
+    if (error) { window.alert('No se pudo agregar la categoría: ' + error.message); return null; }
+
+    await cargarCategorias();
+    poblarCategorias();
+    return nombre;
+  }
+
+  async function manejarCambioCategoria(e) {
+    var select = e.target;
+    if (select.value !== OPCION_NUEVA) return;
+
+    var nombre = window.prompt('Nombre de la nueva categoría:');
+    if (nombre === null || !nombre.trim()) { select.value = ''; return; }
+
+    var nuevo = await agregarCategoria(nombre);
+    select.value = nuevo || '';
+    if (select === filtroCategoria) renderFotos();
+  }
+
+  document.querySelectorAll('.js-categoria').forEach(function (select) {
+    select.addEventListener('change', manejarCambioCategoria);
+  });
 
   async function cargarFotos() {
     cargando.hidden = false;
@@ -125,6 +187,7 @@
   function aplicarFiltros() {
     var texto = filtroTexto.value.trim().toLowerCase();
     var cat = filtroCategoria.value;
+    if (cat === OPCION_NUEVA) cat = '';
     var tipo = filtroTipo.value;
     return fotos.filter(function (f) {
       if (texto && (f.titulo || '').toLowerCase().indexOf(texto) === -1) return false;
@@ -153,7 +216,6 @@
     if (sinResultados) sinResultados.hidden = true;
 
     visibles.forEach(function (foto, i) {
-      var fullIndex = fotos.findIndex(function (f) { return f.id === foto.id; });
       var meta = [];
       if (foto.categoria) meta.push(escapar(foto.categoria));
       if (foto.anio) meta.push(escapar(String(foto.anio)));
@@ -182,8 +244,6 @@
         '</div>' +
         '<div class="admin-card-acciones">' +
           '<button class="admin-card-btn" data-accion="editar" data-id="' + foto.id + '" title="Editar">✏️</button>' +
-          '<button class="admin-card-btn" data-accion="subir" data-id="' + foto.id + '" title="Mover arriba"' + (fullIndex === 0 ? ' disabled' : '') + '>↑</button>' +
-          '<button class="admin-card-btn" data-accion="bajar" data-id="' + foto.id + '" title="Mover abajo"' + (fullIndex === fotos.length - 1 ? ' disabled' : '') + '>↓</button>' +
           '<button class="admin-card-btn admin-card-btn-eliminar" data-accion="borrar" data-id="' + foto.id + '" title="Eliminar">🗑️</button>' +
         '</div>';
       listaFotos.appendChild(card);
@@ -199,8 +259,6 @@
     var accion = btn.dataset.accion;
     if (accion === 'editar') abrirModalEditar(id);
     if (accion === 'borrar') abrirModalBorrar(id);
-    if (accion === 'subir') moverFoto(id, -1);
-    if (accion === 'bajar') moverFoto(id, 1);
     if (accion === 'destacar') alternarDestacada(id, btn);
   });
 
@@ -319,27 +377,6 @@ document.getElementById('bulkDestacar').addEventListener('click', function () {
     }
   });
 
-  /* ── REORDENAR ── */
-
-  async function moverFoto(id, direccion) {
-    var idx = fotos.findIndex(function (f) { return f.id === id; });
-    var nuevoIdx = idx + direccion;
-    if (nuevoIdx < 0 || nuevoIdx >= fotos.length) return;
-    var temp = fotos[idx];
-    fotos[idx] = fotos[nuevoIdx];
-    fotos[nuevoIdx] = temp;
-    try {
-      for (var i = 0; i < fotos.length; i++) {
-        var { error } = await db.from('galeria_fotos').update({ orden: i + 1 }).eq('id', fotos[i].id);
-        if (error) throw error;
-      }
-      renderFotos();
-    } catch (err) {
-      alert('Error al reordenar: ' + err.message);
-      cargarFotos();
-    }
-  }
-
   /* ── MODAL AGREGAR / EDITAR ── */
 
 function abrirModalAgregar() {
@@ -395,22 +432,24 @@ function abrirModalAgregar() {
   document.getElementById('btnCerrarModal').addEventListener('click', cerrarModal);
   document.getElementById('btnCancelar').addEventListener('click', cerrarModal);
   modalOverlay.addEventListener('click', function (e) { if (e.target === modalOverlay) cerrarModal(); });
+  modalOverlay.addEventListener('dragover', function (e) { e.preventDefault(); });
+  modalOverlay.addEventListener('drop', function (e) { e.preventDefault(); });
 
   zonaUpload.addEventListener('click', function () { inputArchivo.click(); });
   zonaUpload.addEventListener('dragover', function (e) { e.preventDefault(); zonaUpload.classList.add('dragover'); });
-  zonaUpload.addEventListener('dragleave', function () { zonaUpload.classList.remove('dragover'); });
+  zonaUpload.addEventListener('dragleave', function (e) { if (!zonaUpload.contains(e.relatedTarget)) zonaUpload.classList.remove('dragover'); });
   zonaUpload.addEventListener('drop', function (e) {
     e.preventDefault();
+    e.stopPropagation();
     zonaUpload.classList.remove('dragover');
-    if (e.dataTransfer.files.length) {
-      inputArchivo.files = e.dataTransfer.files;
-      manejarArchivo();
+    if (e.dataTransfer && e.dataTransfer.files.length) {
+      manejarArchivo(e.dataTransfer.files[0]);
     }
   });
-  inputArchivo.addEventListener('change', manejarArchivo);
+  inputArchivo.addEventListener('change', function () { manejarArchivo(); });
 
-  function manejarArchivo() {
-    var file = inputArchivo.files[0];
+  function manejarArchivo(fileDrop) {
+    var file = fileDrop || inputArchivo.files[0];
     if (!file) return;
     if (!esImagenValida(file)) return;
     archivoSeleccionado = file;
@@ -488,16 +527,23 @@ function abrirModalAgregar() {
   document.getElementById('btnCancelarMasiva').addEventListener('click', cerrarModalMasiva);
   modalMasivaOverlay.addEventListener('click', function (e) { if (e.target === modalMasivaOverlay) cerrarModalMasiva(); });
 
+  function revocarMiniaturas() {
+    for (var i = 0; i < miniaturas.length; i++) URL.revokeObjectURL(miniaturas[i]);
+    miniaturas = [];
+  }
+
   function abrirModalMasiva() {
     archivosMasivos = [];
+    revocarMiniaturas();
     inputMasiva.value = '';
     masivaCategoria.value = '';
     masivaAnio.value = '';
-    
+
     if (masivaDestacada) masivaDestacada.checked = false;
     masivaError.hidden = true;
     masivaProgreso.hidden = true;
     masivaResumen.hidden = true;
+    masivaResumen.innerHTML = '';
     masivaPlaceholder.hidden = false;
     btnSubirMasiva.disabled = true;
     btnSubirMasiva.textContent = 'Subir fotos';
@@ -508,39 +554,66 @@ function abrirModalAgregar() {
     if (subiendoMasiva) return;
     modalMasivaOverlay.hidden = true;
     archivosMasivos = [];
+    revocarMiniaturas();
+    inputMasiva.value = '';
+    masivaResumen.innerHTML = '';
   }
 
+  modalMasivaOverlay.addEventListener('dragover', function (e) { e.preventDefault(); });
+  modalMasivaOverlay.addEventListener('drop', function (e) { e.preventDefault(); });
+
   zonaMasiva.addEventListener('click', function () { inputMasiva.click(); });
-  zonaMasiva.addEventListener('dragover', function (e) { e.preventDefault(); zonaMasiva.classList.add('dragover'); });
-  zonaMasiva.addEventListener('dragleave', function () { zonaMasiva.classList.remove('dragover'); });
+  zonaMasiva.addEventListener('dragover', function (e) { e.preventDefault(); e.stopPropagation(); zonaMasiva.classList.add('dragover'); });
+  zonaMasiva.addEventListener('dragleave', function (e) { if (!zonaMasiva.contains(e.relatedTarget)) zonaMasiva.classList.remove('dragover'); });
   zonaMasiva.addEventListener('drop', function (e) {
     e.preventDefault();
+    e.stopPropagation();
     zonaMasiva.classList.remove('dragover');
-    if (e.dataTransfer.files.length) {
-      inputMasiva.files = e.dataTransfer.files;
-      manejarMasiva();
+    if (e.dataTransfer && e.dataTransfer.files.length) {
+      manejarMasiva(e.dataTransfer.files);
     }
   });
-  inputMasiva.addEventListener('change', manejarMasiva);
+  inputMasiva.addEventListener('change', function () { manejarMasiva(); });
 
-  function manejarMasiva() {
+  function manejarMasiva(archivosDrop) {
     masivaError.hidden = true;
-    archivosMasivos = Array.prototype.slice.call(inputMasiva.files).filter(function (f) {
+    var lista = archivosDrop || inputMasiva.files;
+    var listaArr = Array.prototype.slice.call(lista || []);
+    archivosMasivos = listaArr.filter(function (f) {
       return f.type.startsWith('image/');
     });
-    var ignoradas = inputMasiva.files.length - archivosMasivos.length;
+    var ignoradas = listaArr.length - archivosMasivos.length;
+    revocarMiniaturas();
     if (!archivosMasivos.length) {
       masivaResumen.hidden = true;
+      masivaResumen.innerHTML = '';
       masivaPlaceholder.hidden = false;
       btnSubirMasiva.disabled = true;
       btnSubirMasiva.textContent = 'Subir fotos';
+      if (ignoradas) {
+        masivaError.textContent = 'Ningún archivo seleccionado era una imagen.';
+        masivaError.hidden = false;
+      }
       return;
     }
     masivaPlaceholder.hidden = true;
     masivaResumen.hidden = false;
-    masivaResumen.innerHTML =
-      '<strong>' + archivosMasivos.length + (archivosMasivos.length === 1 ? ' imagen seleccionada' : ' imágenes seleccionadas') + '</strong>' +
-      (ignoradas ? '<span class="admin-upload-ayuda">' + ignoradas + ' archivo(s) no eran imágenes y se ignoraron</span>' : '');
+
+    var visibles = archivosMasivos.slice(0, 24);
+    for (var i = 0; i < visibles.length; i++) miniaturas.push(URL.createObjectURL(visibles[i]));
+
+    var html = '<strong>' + archivosMasivos.length + (archivosMasivos.length === 1 ? ' imagen seleccionada' : ' imágenes seleccionadas') + '</strong>';
+    html += '<div class="admin-masiva-thumbs">';
+    for (var j = 0; j < miniaturas.length; j++) {
+      html += '<img src="' + miniaturas[j] + '" alt="">';
+    }
+    html += '</div>';
+    if (archivosMasivos.length > visibles.length) {
+      html += '<span class="admin-upload-ayuda">+ ' + (archivosMasivos.length - visibles.length) + ' imágenes más</span>';
+    }
+    if (ignoradas) html += '<span class="admin-upload-ayuda">' + ignoradas + ' archivo(s) no eran imágenes y se ignoraron</span>';
+    masivaResumen.innerHTML = html;
+
     btnSubirMasiva.disabled = false;
     btnSubirMasiva.textContent = 'Subir ' + archivosMasivos.length + (archivosMasivos.length === 1 ? ' foto' : ' fotos');
   }
@@ -586,10 +659,8 @@ function abrirModalAgregar() {
       : total - errores + ' subidas, ' + errores + ' con error.';
 
     setTimeout(async function () {
-      modalMasivaOverlay.hidden = true;
       subiendoMasiva = false;
-      btnSubirMasiva.disabled = false;
-      btnSubirMasiva.textContent = 'Subir fotos';
+      cerrarModalMasiva();
       await cargarFotos();
     }, 700);
   });
