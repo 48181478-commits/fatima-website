@@ -46,7 +46,6 @@
   var masivaResumen = document.getElementById('masivaResumen');
   var masivaCategoria = document.getElementById('masivaCategoria');
   var masivaAnio = document.getElementById('masivaAnio');
-  var masivaHistorica = document.getElementById('masivaHistorica');
   var masivaDestacada = document.getElementById('masivaDestacada');
   var masivaError = document.getElementById('masivaError');
   var masivaProgreso = document.getElementById('masivaProgreso');
