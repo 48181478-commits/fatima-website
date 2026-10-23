@@ -20,8 +20,10 @@ const {
 } = Astro.props;
 
 const sitio = Astro.site ?? new URL(Astro.url.origin);
-const canonical = new URL(Astro.url.pathname, sitio);
-const ogImage = new URL(image, sitio);
+const base = import.meta.env.BASE_URL.replace(/\/*$/, '/');
+const canonical = new URL(Astro.url.pathname === base.slice(0, -1) ? base : Astro.url.pathname, sitio);
+const ogImage = new URL(`${base}${image}`, sitio);
+const favicon = new URL(`${base}img/logo-fatima.png`, sitio);
 const nombreSitio = 'Instituto Técnico Nuestra Señora de Fátima';
 ---
 
@@ -53,7 +55,7 @@ const nombreSitio = 'Instituto Técnico Nuestra Señora de Fátima';
     <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   )}
 
-  <link rel="icon" href="img/logo-fatima.png">
+  <link rel="icon" href={favicon.href}>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="css/estilos.css" rel="stylesheet">
   <slot name="head" />
