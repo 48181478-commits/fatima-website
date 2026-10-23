@@ -228,6 +228,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--naranja); outli
 
 /* Filtros y carga de la galería */
 .galeria-cargando { text-align: center; color: var(--gris); font-size: 1.0625rem; padding: 32px 0; }
+.estado-vacio {
+  grid-column: 1 / -1;
+  text-align: center; color: var(--gris); font-size: 1.0625rem;
+  padding: 48px 0; margin: 0;
+}
 .galeria-filtros { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 28px; }
 .chip-filtro {
   border: 1px solid var(--borde); background: #FFFFFF; color: var(--carbon);

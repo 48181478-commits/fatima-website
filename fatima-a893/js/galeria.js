@@ -21,45 +21,25 @@
   var visorIndice = 0;
   var categoriasOrden = (typeof CATEGORIAS !== 'undefined') ? CATEGORIAS.slice() : [];
 
-  var FOTOS_FALLBACK = [
-    {
-      titulo: 'El patio', lugar: 'Patio central', categoria: 'Vida escolar',
-      imagen_url: 'img/patio.jpg', destacada: true, es_historica: false,
-      descripcion: 'El patio durante el recreo, corazón de la vida cotidiana del colegio.'
-    },
-    {
-      titulo: 'SensePad, Proyecto Destacado', lugar: 'Feria de Ciencias', categoria: 'Feria de Ciencias',
-      imagen_url: 'img/sensepad.jpg', es_historica: false,
-      descripcion: 'El equipo de SensePad con el certificado y la placa de Proyecto Destacado 2026.'
-    },
-    {
-      titulo: 'FireNova en el laboratorio', lugar: 'Laboratorio de informática', categoria: 'Talleres y orientaciones',
-      imagen_url: 'img/firenova.jpg', es_historica: false,
-      descripcion: 'Un alumno trabaja en el mapa de calor de FireNova, sistema de alerta temprana de incendios.'
-    },
-    {
-      titulo: 'Los primeros años', lugar: 'Barrio Villa Soldati', categoria: 'Historia', anio: 1968,
-      imagen_url: 'img/padre-leoncio-historica.jpg', es_historica: true,
-      descripcion: 'Foto de archivo: el padre Leoncio caminando de la mano con los primeros chicos del barrio.'
-    },
-    {
-      titulo: 'El padre Leoncio con los chicos', lugar: 'Nuestro fundador', categoria: 'Historia', anio: 1972,
-      imagen_url: 'img/padre-leoncio.jpg', es_historica: true,
-      descripcion: 'El padre Leoncio Herrero, fundador de la obra, rodeado de alumnos.'
-    }
-  ];
-
   function escapar(texto) {
     var div = document.createElement('div');
     div.textContent = texto || '';
     return div.innerHTML;
   }
 
-  function iniciar(fotos) {
+  function iniciar(fotos, error) {
     todasFotos = fotos || [];
     if (cargando) cargando.hidden = true;
     construirFiltros();
+    if (error) {
+      mostrarVacio('No se pudo cargar la galería. Probá de nuevo en unos minutos.');
+      return;
+    }
     renderGrilla();
+  }
+
+  function mostrarVacio(mensaje) {
+    grilla.innerHTML = '<p class="estado-vacio">' + escapar(mensaje) + '</p>';
   }
 
   function categoriasDisponibles() {
@@ -108,6 +88,12 @@
   function renderGrilla() {
     var lista = listaVisible();
     grilla.innerHTML = '';
+    if (!lista.length) {
+      mostrarVacio(categoriaActiva
+        ? 'No hay fotos en esta categoría.'
+        : 'Todavía no hay fotos publicadas.');
+      return;
+    }
     lista.forEach(function (foto, i) {
       var btn = document.createElement('button');
       btn.type = 'button';
@@ -181,10 +167,10 @@
       if (!rCats.error && rCats.data && rCats.data.length) {
         categoriasOrden = rCats.data.map(function (c) { return c.nombre; });
       }
-      var fotos = (!rFotos.error && rFotos.data && rFotos.data.length) ? rFotos.data : FOTOS_FALLBACK;
-      iniciar(fotos);
-    }).catch(function () { iniciar(FOTOS_FALLBACK); });
+      var fotos = (!rFotos.error && rFotos.data) ? rFotos.data : [];
+      iniciar(fotos, !!rFotos.error);
+    }).catch(function () { iniciar([], true); });
   } else {
-    iniciar(FOTOS_FALLBACK);
+    iniciar([], true);
   }
 })();

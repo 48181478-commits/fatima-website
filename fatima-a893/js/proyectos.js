@@ -13,26 +13,7 @@
     pausado: 'Pausado'
   };
 
-  var PROYECTOS_FALLBACK = [
-    {
-      nombre: 'FireNova',
-      estado: 'en_curso',
-      descripcion: 'Sistema de alerta temprana de incendios forestales de bajo costo, con sensores ambientales, comunicación LoRa, detección de humo con inteligencia artificial y un mapa de calor interactivo.',
-      imagen_url: 'img/firenova.jpg'
-    },
-    {
-      nombre: 'SensePad',
-      estado: 'finalizado',
-      descripcion: 'Botonera configurable de cinco botones pensada para personas con discapacidad visual. Fue distinguida como Proyecto Destacado de la Ciudad y representó a CABA en la Feria Nacional.',
-      imagen_url: 'img/sensepad.jpg'
-    },
-    {
-      nombre: 'Huerta escolar',
-      estado: 'activo',
-      descripcion: 'Espacio de aprendizaje interdisciplinario donde los alumnos cultivan, investigan y comparten lo producido con la comunidad.',
-      imagen_url: 'img/patio.jpg'
-    }
-  ];
+  var PROYECTOS_ERROR = 'No se pudieron cargar los proyectos. Probá de nuevo en unos minutos.';
 
   function escapar(texto) {
     var div = document.createElement('div');
@@ -40,8 +21,16 @@
     return div.innerHTML;
   }
 
+  function mostrarVacio(mensaje) {
+    grilla.innerHTML = '<p class="estado-vacio">' + escapar(mensaje) + '</p>';
+  }
+
   function render(proyectos) {
     grilla.innerHTML = '';
+    if (!proyectos.length) {
+      mostrarVacio('Todavía no hay proyectos publicados.');
+      return;
+    }
     proyectos.forEach(function (proy, i) {
       var articulo = document.createElement('article');
       articulo.className = 'tarjeta-proyecto aparecer';
@@ -70,16 +59,16 @@
       .select('*')
       .order('orden', { ascending: true })
       .then(function (result) {
-        var proyectos = (!result.error && result.data && result.data.length) ? result.data : PROYECTOS_FALLBACK;
-        render(proyectos);
         terminar();
+        if (result.error) { mostrarVacio(PROYECTOS_ERROR); return; }
+        render(result.data || []);
       })
       .catch(function () {
-        render(PROYECTOS_FALLBACK);
         terminar();
+        mostrarVacio(PROYECTOS_ERROR);
       });
   } else {
-    render(PROYECTOS_FALLBACK);
     terminar();
+    mostrarVacio(PROYECTOS_ERROR);
   }
 })();
