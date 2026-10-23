@@ -1,3 +1,30 @@
+# Sistema
+
 *.lnk
 Thumbs.db
 .DS_Store
+
+# Entorno
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build / temporales
+dist/
+.cache/
+.astro/
+*.log
+
+# Imágenes generadas por scripts/optimizar-imagenes.mjs
+imagenes-webp/
+imagenes-originales/
+
+# Editores
+.vscode/
+.idea/

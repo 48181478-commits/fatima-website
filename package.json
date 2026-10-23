@@ -1,0 +1,14 @@
+{
+  "name": "fatima-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sitio web del Instituto Técnico Nuestra Señora de Fátima",
+  "scripts": {
+    "imagenes": "node scripts/optimizar-imagenes.mjs",
+    "build": "node scripts/build.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.0"
+  }
+}
