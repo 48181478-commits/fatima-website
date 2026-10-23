@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import contenido from '../contenido/index.html?raw';
+
+const titulo = 'Instituto Técnico Nuestra Señora de Fátima — Secundaria Diurna A-893';
+const descripcion = 'Secundaria técnica y bachillerato en Villa Soldati, CABA. Instituto Técnico Nuestra Señora de Fátima, parte de la Red Educativa Marianista.';
+
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const logo = new URL('img/logo-fatima.png', Astro.site).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'School',
+  name: 'Instituto Técnico Nuestra Señora de Fátima',
+  alternateName: 'Secundaria Diurna A-893',
+  url,
+  logo,
+  email: 'secretaria.sd@fatimarem.edu.ar',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Pergamino 2882',
+    addressLocality: 'Ciudad Autónoma de Buenos Aires',
+    addressRegion: 'CABA',
+    addressCountry: 'AR'
+  },
+  sameAs: ['https://www.instagram.com/institutofatimasoldati/']
+};
+---
+
+<Base title={titulo} description={descripcion} jsonLd={jsonLd}>
+  <Header />
+  <main set:html={contenido} />
+  <Footer />
+
+  <script is:inline src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script is:inline src="js/copiar-correo.js"></script>
+  <script is:inline>
+    document.querySelectorAll('#submenu a:not(.dropdown-toggle)').forEach(function (enlace) {
+      enlace.addEventListener('click', function () {
+        var menu = document.getElementById('submenu');
+        if (menu.classList.contains('show')) bootstrap.Collapse.getOrCreateInstance(menu).hide();
+      });
+    });
+  </script>
+</Base>

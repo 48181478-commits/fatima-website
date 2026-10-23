@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import contenido from '../contenido/admin.html?raw';
+---
+
+<Base
+  title="Acceso administrador — Instituto Técnico Nuestra Señora de Fátima"
+  noindex
+  bodyClass="admin-body"
+>
+  <link slot="head" href="css/admin.css" rel="stylesheet">
+  <Fragment set:html={contenido} />
+</Base>

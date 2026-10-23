@@ -1,0 +1,41 @@
+<!-- GALERÍA -->
+    <section class="seccion">
+      <div class="container">
+        <div class="d-flex flex-column gap-3 mb-4" style="max-width: 760px">
+          <span class="eyebrow">Galería</span>
+          <h1 class="titulo-seccion">Galería de fotos</h1>
+          <p class="texto-largo m-0">Las actividades, los talleres, el laboratorio y la vida escolar. Tocá una foto para verla completa.</p>
+        </div>
+
+        <div class="galeria-filtros" id="galeriaFiltros" hidden></div>
+
+        <div id="galeriaCargando" class="galeria-cargando">Cargando galería…</div>
+
+        <div class="galeria-grilla" id="galeriaGrilla"></div>
+      </div>
+    </section>
+
+    <!-- VISOR DE LA GALERÍA -->
+    <div class="modal fade" id="visorGaleria" tabindex="-1" role="dialog" aria-modal="true" aria-label="Visor de la galería de fotos">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content visor">
+          <div class="modal-body p-0">
+            <img id="visorImagen" src="" alt="">
+          </div>
+          <div class="visor-pie">
+            <div class="visor-datos">
+              <div class="visor-titulo" id="visorTitulo"></div>
+              <div class="visor-meta" id="visorMeta"></div>
+              <div class="visor-lugar" id="visorLugar"></div>
+              <div class="visor-descripcion" id="visorDescripcion"></div>
+            </div>
+            <div class="d-flex align-items-center gap-2 flex-shrink-0">
+              <span class="visor-contador" id="visorContador"></span>
+              <button class="btn-flecha btn-flecha-claro" type="button" id="visorAnterior" aria-label="Foto anterior">‹</button>
+              <button class="btn-flecha btn-flecha-claro" type="button" id="visorSiguiente" aria-label="Foto siguiente">›</button>
+              <button class="btn-close btn-close-white ms-1" type="button" data-bs-dismiss="modal" aria-label="Cerrar la galería"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

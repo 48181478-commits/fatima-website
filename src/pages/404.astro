@@ -1,0 +1,45 @@
+---
+const base = import.meta.env.BASE_URL;
+const inicio = new URL(`${base}index.html`, Astro.site).href;
+const logo = new URL(`${base}img/logo-fatima.png`, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Página no encontrada — Instituto Técnico Nuestra Señora de Fátima</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href={logo}>
+  <style>
+    :root { --rojo: #A6192E; --carbon: #282829; --gris: #6B6B6B; --crema: #F7F3EC; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: var(--crema); color: var(--carbon);
+      font-family: Georgia, "Times New Roman", serif; text-align: center; padding: 24px;
+    }
+    .caja { max-width: 560px; }
+    img { width: 96px; height: 96px; object-fit: contain; }
+    h1 { font-size: clamp(3rem, 12vw, 6rem); margin: 8px 0 0; color: var(--rojo); }
+    h2 { font-size: 1.4rem; margin: 0 0 12px; }
+    p { color: var(--gris); line-height: 1.6; margin: 0 0 28px; }
+    a.boton {
+      display: inline-block; background: var(--rojo); color: #FFFFFF; text-decoration: none;
+      font-family: "Trebuchet MS", system-ui, sans-serif; font-weight: 700; font-size: 1rem;
+      padding: 14px 28px; border-radius: 999px;
+    }
+    a.boton:hover { background: #8A1526; }
+  </style>
+</head>
+<body>
+  <div class="caja">
+    <img src={logo} alt="Logo del Instituto Nuestra Señora de Fátima">
+    <h1>404</h1>
+    <h2>No encontramos esta página</h2>
+    <p>Puede que el enlace esté mal escrito o que la página se haya movido.</p>
+    <a class="boton" href={inicio}>Volver al inicio</a>
+  </div>
+</body>
+</html>

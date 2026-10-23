@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import contenido from '../contenido/panel-galeria.html?raw';
+---
+
+<Base
+  title="Galería — Panel de administración"
+  noindex
+  bodyClass="admin-body"
+>
+  <link slot="head" href="css/admin.css" rel="stylesheet">
+  <Fragment set:html={contenido} />
+</Base>
