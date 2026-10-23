@@ -100,16 +100,21 @@ npm run build
 
 ## Deploy en GitHub Pages
 
+Sitio publicado: <https://48181478-commits.github.io/fatima-website/>
+
 El workflow `.github/workflows/deploy.yml` compila y publica `dist/` en cada
-push a `main`.
+push a `main`. Las variables del repo ya están definidas:
 
-1. En el repo: **Settings → Pages → Source: GitHub Actions**.
-2. Opcional: **Settings → Secrets and variables → Actions → Variables** para
-   definir `SITE_URL` y `BASE_PATH`.
-3. Push a `main` (o correr el workflow a mano).
+| Variable | Valor actual |
+|---|---|
+| `SITE_URL` | `https://48181478-commits.github.io` |
+| `BASE_PATH` | `/fatima-website` |
 
-Si más adelante usan un dominio propio, cargarlo en **Settings → Pages** y
-poner `SITE_URL` con ese dominio.
+El repo debe ser público: GitHub Pages no está disponible en repos privados
+del plan gratuito. En **Settings → Pages**, el origen es **GitHub Actions**.
+
+Si más adelante usan un dominio propio: cargarlo en **Settings → Pages**,
+cambiar `SITE_URL` a ese dominio y `BASE_PATH` a `/`.
 
 ## Base de datos (Supabase)
 
